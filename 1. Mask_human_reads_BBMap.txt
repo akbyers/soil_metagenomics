@@ -1,0 +1,53 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      host_filt_bbmap_map
+#SBATCH --time          1-00:00:00
+#SBATCH --mem           27GB
+#SBATCH --cpus-per-task 12
+#SBATCH --error         %x_%A_%a.err
+#SBATCH --output        %x_%A_%a.out
+
+# Set up working directories
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/metaWRAP
+
+mkdir host_filtered_reads2
+
+# Load BBMap module
+module purge
+module load BBMap/39.01-GCC-11.3.0
+
+#use BBMap to map paired end metagenomic reads against a masked human reference genome 
+#this example only displays code for a subset of samples (regenerating bush) but just repeat or, loop, this code for rest of data
+
+srun bbmap.sh -Xmx27g -t=$SLURM_CPUS_PER_TASK \
+minid=0.95 maxindel=3 bwr=0.16 bw=12 quickmatch fast minhits=2 qtrim=rl trimq=10 untrim \
+in1=RAW_READS/RB1-3_1.fq \
+in2=RAW_READS/RB1-3_2.fq \
+path=/home/byersa/BBMask_human_reference/ \
+outu1=host_filtered_reads2/RB1-3_1.fastq \
+outu2=host_filtered_reads2/RB1-3_2.fastq
+
+srun bbmap.sh -Xmx27g -t=$SLURM_CPUS_PER_TASK \
+minid=0.95 maxindel=3 bwr=0.16 bw=12 quickmatch fast minhits=2 qtrim=rl trimq=10 untrim \
+in1=RAW_READS/RB1-5_1.fq \
+in2=RAW_READS/RB1-5_2.fq \
+path=/home/byersa/BBMask_human_reference/ \
+outu1=host_filtered_reads2/RB1-5_1.fastq \
+outu2=host_filtered_reads2/RB1-5_2.fastq
+
+srun bbmap.sh -Xmx27g -t=$SLURM_CPUS_PER_TASK \
+minid=0.95 maxindel=3 bwr=0.16 bw=12 quickmatch fast minhits=2 qtrim=rl trimq=10 untrim \
+in1=RAW_READS/RB2-1_1.fq \
+in2=RAW_READS/RB2-1_2.fq \
+path=/home/byersa/BBMask_human_reference/ \
+outu1=host_filtered_reads2/RB2-1_1.fastq \
+outu2=host_filtered_reads2/RB2-1_2.fastq
+
+srun bbmap.sh -Xmx27g -t=$SLURM_CPUS_PER_TASK \
+minid=0.95 maxindel=3 bwr=0.16 bw=12 quickmatch fast minhits=2 qtrim=rl trimq=10 untrim \
+in1=RAW_READS/RB2-3_1.fq \
+in2=RAW_READS/RB2-3_2.fq \
+path=/home/byersa/BBMask_human_reference/ \
+outu1=host_filtered_reads2/RB2-3_1.fastq \
+outu2=host_filtered_reads2/RB2-3_2.fastq

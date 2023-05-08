@@ -1,0 +1,50 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      eukrep
+#SBATCH --time          1-00:00:00
+#SBATCH --mem           50GB
+#SBATCH --cpus-per-task 5
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+# Load modules
+module purge
+module load EukRep-EukCC/0.6.7-2.1.0-Miniconda3
+
+# Working directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/
+
+#extract eukaryotic sequences from metagenome assembly files using eukrep
+#set minimum contig length to 1500 bp
+
+#exotic forest
+EukRep -i metaWRAP/ASSEMBLY/EF1/final.contigs.fa -o EukRep/EF1_euk_contigs.fa --min 1500 
+EukRep -i metaWRAP/ASSEMBLY/EF2/final.contigs.fa -o EukRep/EF2_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/EF3/final.contigs.fa -o EukRep/EF3_euk_contigs.fa --min 1500
+
+#native forest
+EukRep -i metaWRAP/ASSEMBLY/NF1/final.contigs.fa -o EukRep/NF1_euk_contigs.fa --min 1500 
+EukRep -i metaWRAP/ASSEMBLY/NF2/final.contigs.fa -o EukRep/NF2_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/NF3/final.contigs.fa -o EukRep/NF3_euk_contigs.fa --min 1500
+
+#regenerating bush
+EukRep -i metaWRAP/ASSEMBLY/RB1/final.contigs.fa -o EukRep/RB1_euk_contigs.fa --min 1500 
+EukRep -i metaWRAP/ASSEMBLY/RB2/final.contigs.fa -o EukRep/RB2_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/RB3/final.contigs.fa -o EukRep/RB3_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/RB4/final.contigs.fa -o EukRep/RB4_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/RB5/final.contigs.fa -o EukRep/RB5_euk_contigs.fa --min 1500
+
+#grazed pasture
+EukRep -i metaWRAP/ASSEMBLY/GP1/final.contigs.fa -o EukRep/GP1_euk_contigs.fa --min 1500 
+EukRep -i metaWRAP/ASSEMBLY/GP2/final.contigs.fa -o EukRep/GP2_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/GP3/final.contigs.fa -o EukRep/GP3_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/GP4/final.contigs.fa -o EukRep/GP4_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/GP5/final.contigs.fa -o EukRep/GP5_euk_contigs.fa --min 1500
+
+#irrigated pasture
+EukRep -i metaWRAP/ASSEMBLY/IP1/final.contigs.fa -o EukRep/IP1_euk_contigs.fa --min 1500 
+EukRep -i metaWRAP/ASSEMBLY/IP2/final.contigs.fa -o EukRep/IP2_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/IP3/final.contigs.fa -o EukRep/IP3_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/IP4/final.contigs.fa -o EukRep/IP4_euk_contigs.fa --min 1500
+EukRep -i metaWRAP/ASSEMBLY/IP5/final.contigs.fa -o EukRep/IP5_euk_contigs.fa --min 1500

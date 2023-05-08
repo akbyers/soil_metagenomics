@@ -1,0 +1,51 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      checkm_drep
+#SBATCH --time          7-00:00:00
+#SBATCH --mem           80GB
+#SBATCH --cpus-per-task 16
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+#Pull the bins from all assemblies together into a single folder
+#repeat these steps for all bin sets across the multiple assemblies
+
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/metaWRAP/
+
+mkdir metawrap_bins
+cd BIN_REFINEMENT/EF1/metawrap_70_5_bins/
+
+for file in *; do cp ${file} EF1_${file}; done #rename bin to append site ID (i.e. EF_, RB_, NF_, GP_, IP_)
+mv EF1*.fa /scale_wlg_nobackup/filesets/nobackup/lincoln03750/metaWRAP/metawrap_bins 
+
+cd /scale_wlg_nobackup/filesets/nobackup/[insert]
+mkdir checkm_drep
+cd checkm_drep
+
+# Step 1: first run checkm to assess genome completeness and contamination
+#This was already done by bin_refinement module but we can repeat for the purposes of this script
+
+module purge
+module load CheckM/1.2.1-gimkl-2022a-Python-3.10.5
+
+checkm lineage_wf -t $SLURM_CPUS_PER_TASK \
+                  --pplacer_threads $SLURM_CPUS_PER_TASK \
+                  -x fa --tab_table -f checkm.txt \
+                  metawrap_bins/ checkm_out/
+
+# Step 2: produce genome info file for dRep 
+echo "genome,completeness,contamination" > dRep.genomeInfo
+cut -f1,12,13 checkm.txt \
+  | sed 's/\t/.fa\t/' \
+  | sed 's/\t/,/g' \
+  | tail -n+2 >> dRep.genomeInfo
+
+# Step 3: run dRep
+module purge
+module load drep/2.3.2-gimkl-2018b-Python-3.7.3
+
+dRep dereplicate --genomeInfo dRep.genomeInfo \
+                 -g metawrap_bins/*.fa \
+                 -p $SLURM_CPUS_PER_TASK \
+                 drep_output/ -comp 70 -con 5

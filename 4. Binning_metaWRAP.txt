@@ -1,0 +1,52 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      binning
+#SBATCH --time          7-00:0:00
+#SBATCH --mem           200GB
+#SBATCH --cpus-per-task 20
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+
+#binning metagenomic assemblies using metabat2 and maxbin2 via the metaWRAP binning module
+
+# Load modules
+module purge
+module load metaWRAP/1.2.1-Miniconda3
+
+# Working directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/metaWRAP
+
+mkdir BINNING
+
+#exotic forest
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/EF1/final.contigs.fa -o BINNING/EF1 -t 12 host_filtered_reads/EF1_1.fastq host_filtered_reads/EF1_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/EF2/final.contigs.fa -o BINNING/EF2 -t 12 host_filtered_reads/EF2_1.fastq host_filtered_reads/EF2_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/EF3/final.contigs.fa -o BINNING/EF3 -t 12 host_filtered_reads/EF3_1.fastq host_filtered_reads/EF3_2.fastq -l 1000
+
+#native forest
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/NF1/final.contigs.fa -o BINNING/NF1 -t $SLURM_CPUS_PER_TASK host_filtered_reads/NF1_1.fastq host_filtered_reads/NF1_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/NF2/final.contigs.fa -o BINNING/NF2 -t $SLURM_CPUS_PER_TASK host_filtered_reads/NF2_1.fastq host_filtered_reads/NF2_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/NF3/final.contigs.fa -o BINNING/NF3 -t $SLURM_CPUS_PER_TASK host_filtered_reads/NF3_1.fastq host_filtered_reads/NF3_2.fastq -l 1000
+
+#grazed pasture
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/GP1/final.contigs.fa -o BINNING/GP1 -t $SLURM_CPUS_PER_TASK host_filtered_reads/GP1_1.fastq host_filtered_reads/GP1_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/GP2/final.contigs.fa -o BINNING/GP2 -t $SLURM_CPUS_PER_TASK host_filtered_reads/GP2_1.fastq host_filtered_reads/GP2_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/GP3/final.contigs.fa -o BINNING/GP3 -t $SLURM_CPUS_PER_TASK host_filtered_reads/GP3_1.fastq host_filtered_reads/GP3_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/GP4/final.contigs.fa -o BINNING/GP4 -t $SLURM_CPUS_PER_TASK host_filtered_reads/GP4_1.fastq host_filtered_reads/GP4_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/GP5/final.contigs.fa -o BINNING/GP5 -t $SLURM_CPUS_PER_TASK host_filtered_reads/GP5_1.fastq host_filtered_reads/GP5_2.fastq -l 1000
+
+#irrigated pasture
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/IP1/final.contigs.fa -o BINNING/IP1 -t $SLURM_CPUS_PER_TASK host_filtered_reads/IP1_1.fastq host_filtered_reads/IP1_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/IP2/final.contigs.fa -o BINNING/IP2 -t $SLURM_CPUS_PER_TASK host_filtered_reads/IP2_1.fastq host_filtered_reads/IP2_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/IP3/final.contigs.fa -o BINNING/IP3 -t $SLURM_CPUS_PER_TASK host_filtered_reads/IP3_1.fastq host_filtered_reads/IP3_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/IP4/final.contigs.fa -o BINNING/IP4 -t $SLURM_CPUS_PER_TASK host_filtered_reads/IP4_1.fastq host_filtered_reads/IP4_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/IP5/final.contigs.fa -o BINNING/IP5 -t $SLURM_CPUS_PER_TASK host_filtered_reads/IP5_1.fastq host_filtered_reads/IP5_2.fastq -l 1000
+
+#regenerating bush
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/RB1/final.contigs.fa -o BINNING/RB1 -t $SLURM_CPUS_PER_TASK host_filtered_reads/RB1_1.fastq host_filtered_reads/RB1_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/RB2/final.contigs.fa -o BINNING/RB2 -t $SLURM_CPUS_PER_TASK host_filtered_reads/RB2_1.fastq host_filtered_reads/RB2_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/RB3/final.contigs.fa -o BINNING/RB3 -t $SLURM_CPUS_PER_TASK host_filtered_reads/RB3_1.fastq host_filtered_reads/RB3_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/RB4/final.contigs.fa -o BINNING/RB4 -t $SLURM_CPUS_PER_TASK host_filtered_reads/RB4_1.fastq host_filtered_reads/RB4_2.fastq -l 1000
+metaWRAP binning --metabat2 --maxbin2 -a ASSEMBLY/RB5/final.contigs.fa -o BINNING/RB5 -t $SLURM_CPUS_PER_TASK host_filtered_reads/RB5_1.fastq host_filtered_reads/RB5_2.fastq -l 1000

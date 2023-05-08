@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      prodigal
+#SBATCH --time          30:00:00
+#SBATCH --mem           5GB
+#SBATCH --cpus-per-task 1
+#SBATCH --error         %x_%A_%a.err
+#SBATCH --output        %x_%A_%a.out
+
+# Load modules
+module purge
+module load prodigal/2.6.3-GCCcore-7.4.0
+
+# Working directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/metaWRAP
+
+# Output directory
+
+mkdir -p prodigal/
+
+# Run prodigal
+
+prodigal -i bin_coverage/dedupe_combined_bins.fna -p meta -d prodigal/dedupe_bins.fna -a prodigal/dedupe_bins.faa -o prodigal/dedupe_bins.gbk

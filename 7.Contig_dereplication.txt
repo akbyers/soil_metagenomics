@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      dedupe_bins
+#SBATCH --time          1-00:00:00
+#SBATCH --mem           5GB
+#SBATCH --cpus-per-task 5
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+# Load modules
+module purge
+module load BBMap/39.01-GCC-11.3.0
+
+# Working directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert]/metaWRAP/
+
+#Option 1: MAGs were concatenated into a single .fna/.fasta file before dedupe
+cat metawrap_70_5_bins/*.fa > metawrap_70_5_bins/combined_bins.fna
+
+#run dedupe
+dedupe.sh in=metawrap_70_5_bins/combined_bins.fna out=metawrap_70_5_bins/dedupe_combined_bins.fna
+
+#Option 2: dedupe was performed across individual MAGs
+for i in metawrap_70_5_bins/*.fa; do 
+ dedupe.sh in=${i} out=dereplicated_${i}
+done

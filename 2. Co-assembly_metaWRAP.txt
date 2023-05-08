@@ -1,0 +1,56 @@
+!/bin/bash -e
+
+SBATCH --account       
+SBATCH --job-name      megahit_assembly
+SBATCH --time          3-00:00:00
+SBATCH --mem           800GB
+SBATCH --cpus-per-task 12
+SBATCH --error         %x_%j.err
+SBATCH --output        %x_%j.out
+
+
+#Multiple co-assembly approach was used, therefore reads were first concatenated by sampling site prior to assembly i.e. 
+
+mkdir CON_READS
+cat host_filtered_reads/EF1*_1.fq > host_filtered_reads/EF1_1.fq
+cat host_filtered_reads/EF1*_2.fq > host_filtered_reads/EF1_2.fq
+cat host_filtered_reads/EF2*_1.fq > host_filtered_reads/EF2_1.fq
+cat host_filtered_reads/EF2*_2.fq > host_filtered_reads/EF2_2.fq
+cat host_filtered_reads/EF3*_1.fq > host_filtered_reads/EF3_1.fq
+cat host_filtered_reads/EF3*_2.fq > host_filtered_reads/EF3_2.fq
+
+#metagenome assembly using MEGAHIT
+
+ Load modules
+module purge
+module load MEGAHIT/1.2.9-gimkl-2022a-Python-3.10.5
+
+ Working directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/metaWRAP
+
+megahit -1 host_filtered_reads/EF1_1_hostFilt.fastq -2 host_filtered_reads/EF1_2_hostFilt.fastq -o ASSEMBLY/EF1 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/EF2_1_hostFilt.fastq -2 host_filtered_reads/EF2_2_hostFilt.fastq -o ASSEMBLY/EF2 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/EF3_1_hostFilt.fastq -2 host_filtered_reads/EF3_2_hostFilt.fastq -o ASSEMBLY/EF3 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+
+megahit -1 host_filtered_reads/NF1_1_hostFilt.fastq -2 host_filtered_reads/NF1_2_hostFilt.fastq -o ASSEMBLY/NF1 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/NF2_1_hostFilt.fastq -2 host_filtered_reads/NF2_2_hostFilt.fastq -o ASSEMBLY/NF2 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/NF3_1_hostFilt.fastq -2 host_filtered_reads/NF3_2_hostFilt.fastq -o ASSEMBLY/NF3 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+
+megahit -1 host_filtered_reads/RB1_1_hostFilt.fastq -2 host_filtered_reads/RB1_2_hostFilt.fastq -o ASSEMBLY/RB1 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/RB2_1_hostFilt.fastq -2 host_filtered_reads/RB2_2_hostFilt.fastq -o ASSEMBLY/RB2 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK --continue
+megahit -1 host_filtered_reads/RB3_1_hostFilt.fastq -2 host_filtered_reads/RB3_2_hostFilt.fastq -o ASSEMBLY/RB3 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK 
+megahit -1 host_filtered_reads/RB4_1_hostFilt.fastq -2 host_filtered_reads/RB4_2_hostFilt.fastq -o ASSEMBLY/RB4 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/RB5_1_hostFilt.fastq -2 host_filtered_reads/RB5_2_hostFilt.fastq -o ASSEMBLY/RB5 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK 
+
+megahit -1 host_filtered_reads/IP1_1_hostFilt.fastq -2 host_filtered_reads/IP1_2_hostFilt.fastq -o ASSEMBLY/IP1 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/IP2_1_hostFilt.fastq -2 host_filtered_reads/IP2_2_hostFilt.fastq -o ASSEMBLY/IP2 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/IP3_1_hostFilt.fastq -2 host_filtered_reads/IP3_2_hostFilt.fastq -o ASSEMBLY/IP3 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/IP4_1_hostFilt.fastq -2 host_filtered_reads/IP4_2_hostFilt.fastq -o ASSEMBLY/IP4 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/IP5_1_hostFilt.fastq -2 host_filtered_reads/IP5_2_hostFilt.fastq -o ASSEMBLY/IP5 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK --continue
+
+megahit -1 host_filtered_reads/GP1_1_hostFilt.fastq -2 host_filtered_reads/GP1_2_hostFilt.fastq -o ASSEMBLY/GP1 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/GP2_1_hostFilt.fastq -2 host_filtered_reads/GP2_2_hostFilt.fastq -o ASSEMBLY/GP2 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/GP3_1_hostFilt.fastq -2 host_filtered_reads/GP3_2_hostFilt.fastq -o ASSEMBLY/GP3 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+megahit -1 host_filtered_reads/GP4_1_hostFilt.fastq -2 host_filtered_reads/GP4_2_hostFilt.fastq -o ASSEMBLY/GP4 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK --continue
+megahit -1 host_filtered_reads/GP5_1_hostFilt.fastq -2 host_filtered_reads/GP5_2_hostFilt.fastq -o ASSEMBLY/GP5 --presets meta-large -m 500000000000 -t $SLURM_CPUS_PER_TASK
+

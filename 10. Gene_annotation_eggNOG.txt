@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      eggNOG
+#SBATCH --time          3-00:00:00
+#SBATCH --mem           20GB
+#SBATCH --cpus-per-task 5
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+# Load modules
+module purge
+module load eggnog-mapper/2.0.1b-gimkl-2020a-Python-2.7.18
+module load DIAMOND/2.1.1-GCC-11.3.0
+
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/metaWRAP
+
+#first download eggNOG database
+mkdir eggNOG
+download_eggnog_data.py --data_dir eggNOG/
+
+#run eggNOG using prodigal output
+emapper.py -i prodigal/dedupe_bins.faa -o eggNOG/ -m diamond --cpu 5 --data_dir eggNOG/

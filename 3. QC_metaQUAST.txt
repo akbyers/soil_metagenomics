@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      metaQUAST
+#SBATCH --time          7-00:00:00
+#SBATCH --mem           200GB
+#SBATCH --cpus-per-task 12
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+# Load module
+module purge
+module load QUAST/5.2.0-gimkl-2022a
+
+# Working directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/metaWRAP
+
+# Run metaquast    
+python /opt/nesi/CS400_centos7_bdw/QUAST/5.2.0-gimkl-2022a/bin/metaquast.py ASSEMBLY/EF*/final.contigs.fa ASSEMBLY/NF*/final.contigs.fa ASSEMBLY/RB*/final.contigs.fa ASSEMBLY/GP*/final.contigs.fa ASSEMBLY/IP*/final.contigs.fa -o metaquast_results -t $SLURM_CPUS_PER_TASK -L -r metaquast_results/quast_downloaded_references --no-plots --no-snps --no-icarus --no-sv 

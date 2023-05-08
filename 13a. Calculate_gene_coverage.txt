@@ -1,0 +1,174 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      mapping_filtered_bins
+#SBATCH --time          7-00:00:00
+#SBATCH --mem           50GB
+#SBATCH --cpus-per-task 5
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+# Load modules
+module purge
+module load Bowtie2/2.4.5-GCC-11.3.0 
+module load SAMtools/1.15.1-GCC-11.3.0
+
+# Working directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/metaWRAP
+
+#Step 1: build the index for Bowtie2 using the concatenated bin data
+
+# Load Bowtie2
+module purge
+module load Bowtie2/2.4.5-GCC-11.3.0
+
+# Build Bowtie2 index
+cd bin_coverage/
+bowtie2-build dedupe_combined_bins.fna bw_bins
+
+#Step 2: Run Bowtie2 to map paired end metagenomic reads back to index of concatenated bins
+
+#exotic forest
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/EF1-1_1.fastq -2 host_filtered_reads2/EF1-1_2.fastq -S bin_coverage/EF1-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/EF1-1.bam bin_coverage/EF1-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/EF1-3_1.fastq -2 host_filtered_reads2/EF1-3_2.fastq -S bin_coverage/EF1-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/EF1-3.bam bin_coverage/EF1-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/EF1-5_1.fastq -2 host_filtered_reads2/EF1-5_2.fastq -S bin_coverage/EF1-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/EF1-5.bam bin_coverage/EF1-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/EF2-1_1.fastq -2 host_filtered_reads2/EF2-1_2.fastq -S bin_coverage/EF2-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/EF2-1.bam bin_coverage/EF2-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/EF2-3_1.fastq -2 host_filtered_reads2/EF2-3_2.fastq -S bin_coverage/EF2-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/EF2-3.bam bin_coverage/EF2-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/EF2-5_1.fastq -2 host_filtered_reads2/EF2-5_2.fastq -S bin_coverage/EF2-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/EF2-5.bam bin_coverage/EF2-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/EF3-1_1.fastq -2 host_filtered_reads2/EF3-1_2.fastq -S bin_coverage/EF3-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/EF3-1.bam bin_coverage/EF3-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/EF3-3_1.fastq -2 host_filtered_reads2/EF3-3_2.fastq -S bin_coverage/EF3-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/EF3-3.bam bin_coverage/EF3-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/EF3-5_1.fastq -2 host_filtered_reads2/EF3-5_2.fastq -S bin_coverage/EF3-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/EF3-5.bam bin_coverage/EF3-5.sam
+
+#native forest
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/NF1-1_1.fastq -2 host_filtered_reads2/NF1-1_2.fastq -S bin_coverage/NF1-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/NF1-1.bam bin_coverage/NF1-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/NF1-3_1.fastq -2 host_filtered_reads2/NF1-3_2.fastq -S bin_coverage/NF1-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/NF1-3.bam bin_coverage/NF1-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/NF1-5_1.fastq -2 host_filtered_reads2/NF1-5_2.fastq -S bin_coverage/NF1-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/NF1-5.bam bin_coverage/NF1-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/NF2-1_1.fastq -2 host_filtered_reads2/NF2-1_2.fastq -S bin_coverage/NF2-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/NF2-1.bam bin_coverage/NF2-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/NF2-3_1.fastq -2 host_filtered_reads2/NF2-3_2.fastq -S bin_coverage/NF2-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/NF2-3.bam bin_coverage/NF2-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/NF2-5_1.fastq -2 host_filtered_reads2/NF2-5_2.fastq -S bin_coverage/NF2-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/NF2-5.bam bin_coverage/NF2-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/NF3-1_1.fastq -2 host_filtered_reads2/NF3-1_2.fastq -S bin_coverage/NF3-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/NF3-1.bam bin_coverage/NF3-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/NF3-3_1.fastq -2 host_filtered_reads2/NF3-3_2.fastq -S bin_coverage/NF3-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/NF3-3.bam bin_coverage/NF3-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/NF3-5_1.fastq -2 host_filtered_reads2/NF3-5_2.fastq -S bin_coverage/NF3-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/NF3-5.bam bin_coverage/NF3-5.sam
+
+#regenerating bush
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB1-1_1.fastq -2 host_filtered_reads2/RB1-1_2.fastq -S bin_coverage/RB1-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB1-1.bam bin_coverage/RB1-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB1-3_1.fastq -2 host_filtered_reads2/RB1-3_2.fastq -S bin_coverage/RB1-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB1-3.bam bin_coverage/RB1-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB1-5_1.fastq -2 host_filtered_reads2/RB1-5_2.fastq -S bin_coverage/RB1-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB1-5.bam bin_coverage/RB1-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB2-1_1.fastq -2 host_filtered_reads2/RB2-1_2.fastq -S bin_coverage/RB2-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB2-1.bam bin_coverage/RB2-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB2-3_1.fastq -2 host_filtered_reads2/RB2-3_2.fastq -S bin_coverage/RB2-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB2-3.bam bin_coverage/RB2-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB2-5_1.fastq -2 host_filtered_reads2/RB2-5_2.fastq -S bin_coverage/RB2-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB2-5.bam bin_coverage/RB2-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB3-1_1.fastq -2 host_filtered_reads2/RB3-1_2.fastq -S bin_coverage/RB3-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB3-1.bam bin_coverage/RB3-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB3-3_1.fastq -2 host_filtered_reads2/RB3-3_2.fastq -S bin_coverage/RB3-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB3-3.bam bin_coverage/RB3-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB3-5_1.fastq -2 host_filtered_reads2/RB3-5_2.fastq -S bin_coverage/RB3-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB3-5.bam bin_coverage/RB3-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB4-1_1.fastq -2 host_filtered_reads2/RB4-1_2.fastq -S bin_coverage/RB4-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB4-1.bam bin_coverage/RB4-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB4-3_1.fastq -2 host_filtered_reads2/RB4-3_2.fastq -S bin_coverage/RB4-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB4-3.bam bin_coverage/RB4-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB4-5_1.fastq -2 host_filtered_reads2/RB4-5_2.fastq -S bin_coverage/RB4-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB4-5.bam bin_coverage/RB4-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB5-1_1.fastq -2 host_filtered_reads2/RB5-1_2.fastq -S bin_coverage/RB5-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB5-1.bam bin_coverage/RB5-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB5-3_1.fastq -2 host_filtered_reads2/RB5-3_2.fastq -S bin_coverage/RB5-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB5-3.bam bin_coverage/RB5-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/RB5-5_1.fastq -2 host_filtered_reads2/RB5-5_2.fastq -S bin_coverage/RB5-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/RB5-5.bam bin_coverage/RB5-5.sam
+
+#irrigated pasture
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP1-1_1.fastq -2 host_filtered_reads2/IP1-1_2.fastq -S bin_coverage/IP1-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP1-1.bam bin_coverage/IP1-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP1-3_1.fastq -2 host_filtered_reads2/IP1-3_2.fastq -S bin_coverage/IP1-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP1-3.bam bin_coverage/IP1-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP1-5_1.fastq -2 host_filtered_reads2/IP1-5_2.fastq -S bin_coverage/IP1-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP1-5.bam bin_coverage/IP1-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP2-1_1.fastq -2 host_filtered_reads2/IP2-1_2.fastq -S bin_coverage/IP2-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP2-1.bam bin_coverage/IP2-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP2-3_1.fastq -2 host_filtered_reads2/IP2-3_2.fastq -S bin_coverage/IP2-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP2-3.bam bin_coverage/IP2-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP2-5_1.fastq -2 host_filtered_reads2/IP2-5_2.fastq -S bin_coverage/IP2-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP2-5.bam bin_coverage/IP2-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP3-1_1.fastq -2 host_filtered_reads2/IP3-1_2.fastq -S bin_coverage/IP3-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP3-1.bam bin_coverage/IP3-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP3-3_1.fastq -2 host_filtered_reads2/IP3-3_2.fastq -S bin_coverage/IP3-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP3-3.bam bin_coverage/IP3-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP3-5_1.fastq -2 host_filtered_reads2/IP3-5_2.fastq -S bin_coverage/IP3-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP3-5.bam bin_coverage/IP3-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP4-1_1.fastq -2 host_filtered_reads2/IP4-1_2.fastq -S bin_coverage/IP4-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP4-1.bam bin_coverage/IP4-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP4-3_1.fastq -2 host_filtered_reads2/IP4-3_2.fastq -S bin_coverage/IP4-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP4-3.bam bin_coverage/IP4-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP4-5_1.fastq -2 host_filtered_reads2/IP4-5_2.fastq -S bin_coverage/IP4-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP4-5.bam bin_coverage/IP4-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP5-1_1.fastq -2 host_filtered_reads2/IP5-1_2.fastq -S bin_coverage/IP5-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP5-1.bam bin_coverage/IP5-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP5-3_1.fastq -2 host_filtered_reads2/IP5-3_2.fastq -S bin_coverage/IP5-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP5-3.bam bin_coverage/IP5-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/IP5-5_1.fastq -2 host_filtered_reads2/IP5-5_2.fastq -S bin_coverage/IP5-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/IP5-5.bam bin_coverage/IP5-5.sam
+
+#grazed pasture
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP1-1_1.fastq -2 host_filtered_reads2/GP1-1_2.fastq -S bin_coverage/GP1-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP1-1.bam bin_coverage/GP1-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP1-3_1.fastq -2 host_filtered_reads2/GP1-3_2.fastq -S bin_coverage/GP1-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP1-3.bam bin_coverage/GP1-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP1-5_1.fastq -2 host_filtered_reads2/GP1-5_2.fastq -S bin_coverage/GP1-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP1-5.bam bin_coverage/GP1-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP2-1_1.fastq -2 host_filtered_reads2/GP2-1_2.fastq -S bin_coverage/GP2-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP2-1.bam bin_coverage/GP2-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP2-3_1.fastq -2 host_filtered_reads2/GP2-3_2.fastq -S bin_coverage/GP2-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP2-3.bam bin_coverage/GP2-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP2-5_1.fastq -2 host_filtered_reads2/GP2-5_2.fastq -S bin_coverage/GP2-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP2-5.bam bin_coverage/GP2-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP3-1_1.fastq -2 host_filtered_reads2/GP3-1_2.fastq -S bin_coverage/GP3-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP3-1.bam bin_coverage/GP3-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP3-3_1.fastq -2 host_filtered_reads2/GP3-3_2.fastq -S bin_coverage/GP3-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP3-3.bam bin_coverage/GP3-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP3-5_1.fastq -2 host_filtered_reads2/GP3-5_2.fastq -S bin_coverage/GP3-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP3-5.bam bin_coverage/GP3-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP4-1_1.fastq -2 host_filtered_reads2/GP4-1_2.fastq -S bin_coverage/GP4-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP4-1.bam bin_coverage/GP4-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP4-3_1.fastq -2 host_filtered_reads2/GP4-3_2.fastq -S bin_coverage/GP4-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP4-3.bam bin_coverage/GP4-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP4-5_1.fastq -2 host_filtered_reads2/GP4-5_2.fastq -S bin_coverage/GP4-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP4-5.bam bin_coverage/GP4-5.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP5-1_1.fastq -2 host_filtered_reads2/GP5-1_2.fastq -S bin_coverage/GP5-1.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP5-1.bam bin_coverage/GP5-1.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP5-3_1.fastq -2 host_filtered_reads2/GP5-3_2.fastq -S bin_coverage/GP5-3.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP5-3.bam bin_coverage/GP5-3.sam
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x bin_coverage/bw_bins -1 host_filtered_reads2/GP5-5_1.fastq -2 host_filtered_reads2/GP5-5_2.fastq -S bin_coverage/GP5-5.sam
+samtools sort -@ $SLURM_CPUS_PER_TASK -o bin_coverage/GP5-5.bam bin_coverage/GP5-5.sam
+
+#Step 3: generate the per-sample coverage table for each contig in each bin via MetaBAT's jgi_summarize_bam_contig_depths
+
+module purge
+module load MetaBAT/2.15-GCC-11.3.0
+
+# calculate coverage table
+jgi_summarize_bam_contig_depths --outputDepth bin_coverage/bins_cov_table.txt bin_coverage/*.bam
+

@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      metabolic_c
+#SBATCH --time          7-00:00:00
+#SBATCH --mem           500GB
+#SBATCH --cpus-per-task 12
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+# Load modules
+module purge
+module load METABOLIC/4.0-Miniconda3
+
+#change directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/
+
+#running community workflow of METABOLIC
+#input files are dereplicated bin metawrap_70_5_bins
+#read_files.txt is file path of paired end host filtered metagenomic reads
+
+METABOLIC-C.pl -in-gn METABOLIC/ -r METABOLIC/read_files.txt -t $SLURM_CPUS_PER_TASK -o METABOLIC/metabolic_out

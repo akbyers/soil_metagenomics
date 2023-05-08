@@ -1,0 +1,54 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      bin_refinement
+#SBATCH --time          7-00:00:00
+#SBATCH --mem           200GB
+#SBATCH --cpus-per-task 12
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+#consolidating the metagenomic bins recovered from the two binning algorithms into a final bin set using metaWRAP
+#CheckM is then run to evaluate the completion and contamination of the bins
+#selecting bins with a completeness 70% and contamination 5%
+
+# Load modules
+module purge
+module load metaWRAP/1.2.1-Miniconda3
+module load CheckM/1.2.1-gimkl-2022a-Python-3.10.5
+
+#change directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/metaWRAP
+
+mkdir BIN_REFINEMENT
+
+#exotic forest
+#metawrap bin_refinement -o BIN_REFINEMENT/EF1  -A BINNING/EF1/metabat2_bins/ -B BINNING/EF1/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/EF2  -A BINNING/EF2/metabat2_bins/ -B BINNING/EF2/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/EF3  -A BINNING/EF3/metabat2_bins/ -B BINNING/EF3/maxbin2_bins/ -c 70 -x 5
+
+#native forest
+#metawrap bin_refinement -o BIN_REFINEMENT/NF1  -A BINNING/NF1/metabat2_bins/ -B BINNING/NF1/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/NF2  -A BINNING/NF2/metabat2_bins/ -B BINNING/NF2/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/NF3  -A BINNING/NF3/metabat2_bins/ -B BINNING/NF3/maxbin2_bins/ -c 70 -x 5
+
+#regenerating bush
+#metawrap bin_refinement -o BIN_REFINEMENT/RB1  -A BINNING/RB1/metabat2_bins/ -B BINNING/RB1/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/RB2  -A BINNING/RB2/metabat2_bins/ -B BINNING/RB2/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/RB3  -A BINNING/RB3/metabat2_bins/ -B BINNING/RB3/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/RB4  -A BINNING/RB4/metabat2_bins/ -B BINNING/RB4/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/RB5  -A BINNING/RB5/metabat2_bins/ -B BINNING/RB5/maxbin2_bins/ -c 70 -x 5
+
+#irrigated pasture
+#metawrap bin_refinement -o BIN_REFINEMENT/IP1  -A BINNING/IP1/metabat2_bins/ -B BINNING/IP1/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/IP2  -A BINNING/IP2/metabat2_bins/ -B BINNING/IP2/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/IP3  -A BINNING/IP3/metabat2_bins/ -B BINNING/IP3/maxbin2_bins/ -c 70 -x 5
+#metawrap bin_refinement -o BIN_REFINEMENT/IP4  -A BINNING/IP4/metabat2_bins/ -B BINNING/IP4/maxbin2_bins/ -c 70 -x 5
+metawrap bin_refinement -o BIN_REFINEMENT/IP5  -A BINNING/IP5/metabat2_bins/ -B BINNING/IP5/maxbin2_bins/ -c 70 -x 5
+
+#grazed pasture
+metawrap bin_refinement -o BIN_REFINEMENT/GP1  -A BINNING/GP1/metabat2_bins/ -B BINNING/GP1/maxbin2_bins/ -c 70 -x 5
+metawrap bin_refinement -o BIN_REFINEMENT/GP2  -A BINNING/GP2/metabat2_bins/ -B BINNING/GP2/maxbin2_bins/ -c 70 -x 5
+metawrap bin_refinement -o BIN_REFINEMENT/GP3  -A BINNING/GP3/metabat2_bins/ -B BINNING/GP3/maxbin2_bins/ -c 70 -x 5
+metawrap bin_refinement -o BIN_REFINEMENT/GP4  -A BINNING/GP4/metabat2_bins/ -B BINNING/GP4/maxbin2_bins/ -c 70 -x 5
+metawrap bin_refinement -o BIN_REFINEMENT/GP5  -A BINNING/GP5/metabat2_bins/ -B BINNING/GP5/maxbin2_bins/ -c 70 -x 5

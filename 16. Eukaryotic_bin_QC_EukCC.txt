@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      eukCC
+#SBATCH --time          2-00:00:00
+#SBATCH --mem           10GB
+#SBATCH --cpus-per-task 5
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+# Working directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/EukRep
+
+mkdir EukCC
+
+# Load modules
+module purge
+module load EukRep-EukCC/0.6.7-2.1.0-Miniconda3
+
+#Step 1: download eukCC database
+mkdir eukccdb
+cd eukccdb
+wget http://ftp.ebi.ac.uk/pub/databases/metagenomics/eukcc/eukcc2_db_ver_1.1.tar.gz
+tar -xzvf eukcc2_db_ver_1.1.tar.gz
+
+#Step 2: performing eukCC in folder mode
+cd ..
+eukcc folder --out EukCC --db eukccdb/eukcc2_db_ver_1.1 --threads 5 metabat_binning/all_bins 

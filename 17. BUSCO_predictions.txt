@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      BUSCO_predictions
+#SBATCH --time          3-00:00:00
+#SBATCH --mem           20GB
+#SBATCH --cpus-per-task 5
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+# Load modules
+module purge
+module load BUSCO/5.3.2-gimkl-2020a
+
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/metaWRAP/BUSCO
+
+#input file is folder of dereplicated final bin set
+#run bacterial busco predictions
+busco -i bacteria_BUSCOs -l bacteria_odb10 -o bacteria_BUSCO_out -m genome 
+
+#run archaeal busco predictions
+busco -i archaea_BUSCOs -l archaea_odb10 -o archaea_BUSCO_out -m genome

@@ -1,0 +1,55 @@
+#!/bin/bash -e
+
+#SBATCH --account       
+#SBATCH --job-name      metabat_eukrep
+#SBATCH --time          7-00:00:00
+#SBATCH --mem           50GB
+#SBATCH --cpus-per-task 12
+#SBATCH --error         %x_%j.err
+#SBATCH --output        %x_%j.out
+
+#binning the eukaryotic data using the metawrap binnning pipeline, using the metabat binning algorithm only
+
+# Working directory
+cd /scale_wlg_nobackup/filesets/nobackup/[insert_project]/EukRep
+
+# Load modules
+module purge
+module load metaWRAP/1.2.1-Miniconda3
+
+cd /scale_wlg_nobackup/filesets/nobackup/lincoln03750/EukRep
+mkdir metabat_binning
+
+#using contigs extracted from EukRep as input
+#using paired-end host filtered metagenomic reads as input
+
+#exotic forest
+metawrap binning -o metabat_binning/EF1 -t 12 -a EF1_euk_contigs.fa --metabat2 host_filtered_reads2/EF1*.fastq --metabat2
+metawrap binning -o metabat_binning/EF2 -t 12 -a EF2_euk_contigs.fa --metabat2 host_filtered_reads2/EF2*.fastq --metabat2
+metawrap binning -o metabat_binning/EF3 -t 12 -a EF3_euk_contigs.fa --metabat2 host_filtered_reads2/EF3*.fastq --metabat2
+
+#native forest
+#metawrap binning -o metabat_binning/NF1 -t 12 -a NF1_euk_contigs.fa --metabat2 host_filtered_reads2/NF1*.fastq --metabat2
+#metawrap binning -o metabat_binning/NF2 -t 12 -a NF2_euk_contigs.fa --metabat2 host_filtered_reads2/NF2*.fastq --metabat2
+#metawrap binning -o metabat_binning/NF3 -t 12 -a NF3_euk_contigs.fa --metabat2 host_filtered_reads2/NF3*.fastq --metabat2
+
+#regenerating bush
+#metawrap binning -o metabat_binning/RB1 -t 12 -a RB1_euk_contigs.fa --metabat2 host_filtered_reads2/RB1*.fastq --metabat2
+#metawrap binning -o metabat_binning/RB2 -t 12 -a RB2_euk_contigs.fa --metabat2 host_filtered_reads2/RB2*.fastq --metabat2
+#metawrap binning -o metabat_binning/RB3 -t 12 -a RB3_euk_contigs.fa --metabat2 host_filtered_reads2/RB3*.fastq --metabat2
+#metawrap binning -o metabat_binning/RB4 -t 12 -a RB4_euk_contigs.fa --metabat2 host_filtered_reads2/RB4*.fastq --metabat2
+#metawrap binning -o metabat_binning/RB5 -t 12 -a RB5_euk_contigs.fa --metabat2 host_filtered_reads2/RB5*.fastq --metabat2
+
+#grazed pasture
+#metawrap binning -o metabat_binning/GP1 -t 12 -a GP1_euk_contigs.fa --metabat2 host_filtered_reads2/GP1*.fastq --metabat2
+#metawrap binning -o metabat_binning/GP2 -t 12 -a GP2_euk_contigs.fa --metabat2 host_filtered_reads2/GP2*.fastq --metabat2
+#metawrap binning -o metabat_binning/GP3 -t 12 -a GP3_euk_contigs.fa --metabat2 host_filtered_reads2/GP3*.fastq --metabat2
+#metawrap binning -o metabat_binning/GP4 -t 12 -a GP4_euk_contigs.fa --metabat2 host_filtered_reads2/GP4*.fastq --metabat2
+#metawrap binning -o metabat_binning/GP5 -t 12 -a GP5_euk_contigs.fa --metabat2 host_filtered_reads2/GP5*.fastq --metabat2
+
+#irrigated pasture
+#metawrap binning -o metabat_binning/IP1 -t 12 -a IP1_euk_contigs.fa --metabat2 host_filtered_reads2/IP1*.fastq --metabat2
+#metawrap binning -o metabat_binning/IP2 -t 12 -a IP2_euk_contigs.fa --metabat2 host_filtered_reads2/IP2*.fastq --metabat2
+#metawrap binning -o metabat_binning/IP3 -t 12 -a IP3_euk_contigs.fa --metabat2 host_filtered_reads2/IP3*.fastq --metabat2
+#metawrap binning -o metabat_binning/IP4 -t 12 -a IP4_euk_contigs.fa --metabat2 host_filtered_reads2/IP4*.fastq --metabat2
+#metawrap binning -o metabat_binning/IP5 -t 12 -a IP5_euk_contigs.fa --metabat2 host_filtered_reads2/IP5*.fastq --metabat2
